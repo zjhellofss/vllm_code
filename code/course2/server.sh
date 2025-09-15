@@ -1,4 +1,4 @@
-python3 -m vllm.entrypoints.openai.api_server \
+http_proxy= https_proxy= no_proxy=* python3 -m vllm.entrypoints.openai.api_server \
   --model "Qwen/Qwen3-1.7B" \
   --dtype float16 \
   --max-model-len 4096 \
@@ -7,4 +7,4 @@ python3 -m vllm.entrypoints.openai.api_server \
   --max-num-seqs 256 \
   --port "13333" \
   --tensor-parallel-size 2 \
-  --pipeline-parallel-size 1 \
+  --pipeline-parallel-size 1 

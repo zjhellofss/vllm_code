@@ -3,7 +3,7 @@
 curl -s --noproxy '*' http://127.0.0.1:13333/v1/models | jq .
 
 # 2. 走 chat/completions 生成文本
-curl -s --noproxy '*' http://127.0.0.1:13333/v1/chat/completions \
+curl -s --noproxy '*' http://127.0.0.1:13335/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "Qwen/Qwen3-1.7B",

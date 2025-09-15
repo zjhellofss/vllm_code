@@ -1,21 +1,21 @@
-{
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://code.visualstudio.com/docs/editor/debugging
-    "version": "0.2.0",
-    "configurations": [
+// {
+//     // Use IntelliSense to learn about possible attributes.
+//     // Hover to view descriptions of existing attributes.
+//     // For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+//     "version": "0.2.0",
+//     "configurations": [
 
-        {
-            "name": "Python: Current File",
-            "type": "debugpy",
-            "request": "launch",
-            //   换成你要调试的py文件路径
-            "program": "/home/test_fss/code/vllm_learn/code/course0/offline/offline_infer.py", 
-            "console": "integratedTerminal",
-            "justMyCode": false
-        },
-    ]
-}
+//         {
+//             "name": "Python: Current File",
+//             "type": "debugpy",
+//             "request": "launch",
+//             //   换成你要调试的py文件路径
+//             "program": "/home/test_fss/code/vllm_learn/code/course0/offline/offline_infer.py", 
+//             "console": "integratedTerminal",
+//             "justMyCode": false
+//         },
+//     ]
+// }
 
 // {
 //     "version": "0.2.0",
@@ -32,3 +32,63 @@
 //         }
 //     ]
 // }
+
+
+// {
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "name": "Python: Attach by PID",
+//             "type": "debugpy",
+//             "request": "attach",
+//             // ① 让 VS Code 弹出进程列表，你手动选 PID
+//             "processId": "${command:pickProcess}",
+//             // ② 也可以写死 PID，例如 "processId": 12345
+//             "justMyCode": false, // 想跳进第三方库就关
+//             "subProcess": true // 如果目标会 fork 子进程也一起调试
+//         }
+//     ]
+// }
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "vLLM: API Server Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "vllm.entrypoints.openai.api_server",
+            "args": [
+                "--model",
+                "Qwen/Qwen3-1.7B",
+                "--dtype",
+                "float16",
+                "--max-model-len",
+                "4096",
+                "--gpu-memory-utilization",
+                "0.95",
+                "--max-num-batched-tokens",
+                "8192",
+                "--max-num-seqs",
+                "256",
+                "--port",
+                "13337",
+                "--tensor-parallel-size",
+                "2",
+                "--pipeline-parallel-size",
+                "1","--enforce-eager"
+            ],
+            "env": {
+                // 可选：设置 CUDA_VISIBLE_DEVICES 控制 GPU 使用
+                // "CUDA_VISIBLE_DEVICES": "0,1",
+                // 开启 vLLM 调试日志
+                "VLLM_LOGGING_LEVEL": "DEBUG",
+                "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}"
+            },
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false
+        }
+    ]
+}

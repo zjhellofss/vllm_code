@@ -1,0 +1,49 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "vLLM: API Server Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "vllm.entrypoints.openai.api_server",
+            "args": [
+                "--model",
+                "Qwen/Qwen3-1.7B",
+                "--dtype",
+                "float16",
+                "--max-model-len",
+                "4096",
+                "--gpu-memory-utilization",
+                "0.95",
+                "--max-num-batched-tokens",
+                "8192",
+                "--max-num-seqs",
+                "256",
+                "--port",
+                "13335",
+                "--tensor-parallel-size",
+                "2",
+                "--pipeline-parallel-size",
+                "1",
+                "--enforce-eager"
+            ],
+            "env": {
+                // 显式禁用代理
+                "http_proxy": "",
+                "https_proxy": "",
+                "ftp_proxy": "",
+                "HTTP_PROXY": "",
+                "HTTPS_PROXY": "",
+                "FTP_PROXY": "",
+                "no_proxy": "*", // 可选：对所有域名都不走代理
+                // 其他原有环境变量
+                "VLLM_LOGGING_LEVEL": "DEBUG",
+                "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}"
+            },
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false
+        }
+    ]
+}
