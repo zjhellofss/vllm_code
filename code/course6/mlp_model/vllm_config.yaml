@@ -1,0 +1,10 @@
+model_type: mlp_pooling          
+task: embed                      
+architectures: ["MLPModel"]      
+dtype: float16
+max_model_len: 32
+pooler_type: LAST                
+hidden_size: 256
+num_attention_heads: 1
+num_hidden_layers: 1
+block_size: 16                  
