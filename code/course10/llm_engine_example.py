@@ -14,7 +14,7 @@ from vllm.utils import FlexibleArgumentParser
 def create_test_prompts() -> list[tuple[str, SamplingParams]]:
     """Create a list of test prompts with their sampling parameters."""
     return [
-        (
+        ( 
             "A robot may not injure a human being",
             SamplingParams(temperature=0.0, logprobs=1, prompt_logprobs=1),
         ),
