@@ -1,36 +1,41 @@
 import torch
 import time
 
-assert torch.cuda.is_available(), "CUDA not available"
-
 device = 'cuda'
-N = 1024
-num_warmup = 5
-num_iter =  5
-# 创建固定大小的输入（必须在捕获前分配好）
-x = torch.randn(N, N, device=device)
-y = torch.randn(N, N, device=device)
+N = 2
+
+# 1. 初始状态：x 为全 1
+x = torch.ones(N, N, device=device)
+y = torch.ones(N, N, device=device)
 z = torch.empty(N, N, device=device)
 
+# 捕获图
 graph = torch.cuda.CUDAGraph()
 stream = torch.cuda.Stream()
+
+for _ in range(3):
+    temp = torch.mm(x, y)
+torch.cuda.synchronize()  # 确保预热彻底完成
+
+
 with torch.cuda.stream(stream):
-    for _ in range(num_warmup):
-        z = torch.mm(x, y) + torch.sin(x)
+    # 捕获：z = x * y (即 1 * 1)
+    with torch.cuda.graph(graph):
+        z = torch.mm(x, y)
 torch.cuda.synchronize()
 
-with torch.cuda.graph(graph):
-    z = torch.mm(x, y) + torch.sin(x)
-torch.cuda.synchronize()
+print("--- 初始捕获完成 ---")
+print(f"初始 x 地址: {x.data_ptr()}, 初始 z 结果:\n{z}")
 
+print("\n--- 场景 1: 原地修改内容 (x.fill_(2)) ---")
+x.fill_(2.0)  # 地址没变，内容变了
+graph.replay()
+print(f"x 地址: {x.data_ptr()}, z 结果 (预期应该是 4):\n{z}")
 
+print("\n--- 场景 2: 改变变量地址 (x = torch.full...) ---")
+x = torch.full((N, N), 5.0, device=device)
 
-start = time.time()
-for _ in range(num_iter):
-    x.normal_()
-    graph.replay()
-    print(f"z.data_ptr(): {z.data_ptr()}")
-torch.cuda.synchronize()
-graph_time = time.time() - start
-print(f"CUDA Graph time:        {graph_time:.4f} s")
+graph.replay()
 
+print(f"图重放后的 z 结果:")
+print(z)
