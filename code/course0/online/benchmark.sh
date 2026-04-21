@@ -7,7 +7,7 @@ vllm bench serve \
     --model Qwen/Qwen3-1.7B \
     --host 127.0.0.1 \
     --random-input-len 128 \
-    --port 13312 \
+    --port 13311 \
     --request-rate 10 \
     --num-prompts 100 \
     --save-result \
